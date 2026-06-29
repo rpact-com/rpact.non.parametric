@@ -207,7 +207,7 @@ Possible function skeleton:
 ```r
 getAnalysisResults(
     design,
-    data,
+    dataInput,
     ...
 )
 ```
@@ -217,7 +217,7 @@ Possible function skeleton of the internal helper function:
 ```r
 .getAnalysisResultsNonparametric(
     design,
-    data,
+    dataInput,
     endpoint,
     treatment,
     stage = NULL,
