@@ -34,14 +34,14 @@ independent outcomes $X_1 \sim F_1$ and $X_2 \sim F_2$, the parameter is
 defined as
 
 $$
-p = P(X_1 < X_2) + \frac{1}{2} P(X_1 = X_2).
+\theta = P(X_1 < X_2) + \frac{1}{2} P(X_1 = X_2).
 $$
 
-If lower values are favorable, $p$ can be interpreted as the probability that
+If lower values are favorable, $\theta$ can be interpreted as the probability that
 a patient from treatment arm 1 has a better outcome than a patient from
 treatment arm 2, with ties counted as half wins. The parameter can also be
-expressed on the win odds scale, $p / (1 - p)$, or on the log win odds scale,
-$\log\{p / (1 - p)\}$. These effect scales are particularly attractive for
+expressed on the win odds scale, $\theta / (1 - \theta)$, or on the log win odds scale,
+$\log\{\theta / (1 - \theta)\}$. These effect scales are particularly attractive for
 ordered categorical endpoints, clinical scores, patient-reported outcomes,
 disability scores, and continuous endpoints for which a rank-based
 interpretation is preferable to a mean difference.
@@ -75,9 +75,8 @@ small-sample behavior. This section should be completed by the paper authors.
 
 Preliminary notes:
 
-- Natural effect scale: Mann-Whitney parameter $p$
-- Typical null hypothesis: equality of distributions, or operationally
-  $p = 1/2$ under additional assumptions
+- Natural effect scale: Mann-Whitney parameter $\theta$
+- Null hypothesis: equality of distributions $H_0: F_1 = F_2$
 - Particularly suitable when the distributions can reasonably be assumed equal
   under the null hypothesis
 - Needs clear documentation regarding ties and ordinal endpoints
@@ -86,9 +85,9 @@ Preliminary notes:
 
 Preliminary notes:
 
-- Natural effect scale: Mann-Whitney parameter $p$
-- More directly targets the nonparametric Behrens-Fisher setting
-- Allows testing $H_0: p = 1/2$ without requiring equality of the full
+- Natural effect scale: Mann-Whitney parameter $\theta$
+- Targets the nonparametric Behrens-Fisher problem
+- Null hypothesis: $H_0: \theta = 1/2$ without requiring equality of the full
   distributions
 - May require careful handling of small sample behavior and possible
   t-approximation options
@@ -97,10 +96,11 @@ Preliminary notes:
 
 Preliminary notes:
 
-- Natural effect scale: log win odds, $\log\{p/(1-p)\}$
+- Natural effect scale: log win odds, $\log\{\theta/(1-\theta)\}$
 - Can be mapped back to win odds or the Mann-Whitney parameter for
   interpretation
-- May be useful as the default analysis scale if it provides better behaved
+- Null hypothesis: $H_0: \log\{\theta/(1-\theta)\} = 0$
+- May be useful as the default analysis scale as it provides range-preserving
   confidence intervals or more stable inference
 - Needs discussion of how results should be displayed to users
 
@@ -135,7 +135,7 @@ getSampleSizeNonparametric(
     effect,
     effectMeasure = c("mannWhitneyParameter", "winOdds", "logWinOdds"),
     test = c("wilcoxonMannWhitney", "brunnerMunzel", "logWinOdds"),
-    endpointScale = c("continuous", "ordinal", "orderedCategorical"),
+    endpointScale = c("continuous", "ordinal"),
     direction = c("lowerIsBetter", "higherIsBetter"),
     allocationRatioPlanned = 1,
     power = 0.8,
@@ -147,7 +147,7 @@ getSampleSizeNonparametric(
 Open design questions:
 
 - Should `effect` always be interpreted according to `effectMeasure`, or should
-  separate arguments such as `p`, `winOdds`, and `logWinOdds` be preferred?
+  separate arguments such as `theta`, `winOdds`, and `logWinOdds` be preferred?
 - Should `test = "logWinOdds"` automatically imply
   `effectMeasure = "logWinOdds"`, or should the test and reporting scale be
   independent?
@@ -174,7 +174,7 @@ getPowerNonparametric(
     effect,
     effectMeasure = c("mannWhitneyParameter", "winOdds", "logWinOdds"),
     test = c("wilcoxonMannWhitney", "brunnerMunzel", "logWinOdds"),
-    endpointScale = c("continuous", "ordinal", "orderedCategorical"),
+    endpointScale = c("continuous", "ordinal"),
     direction = c("lowerIsBetter", "higherIsBetter"),
     allocationRatioPlanned = 1,
     thetaH0 = NULL,
@@ -223,7 +223,7 @@ Possible function skeleton of the internal helper function:
     stage = NULL,
     effectMeasure = c("mannWhitneyParameter", "winOdds", "logWinOdds"),
     test = c("wilcoxonMannWhitney", "brunnerMunzel", "logWinOdds"),
-    endpointScale = c("continuous", "ordinal", "orderedCategorical"),
+    endpointScale = c("continuous", "ordinal"),
     direction = c("lowerIsBetter", "higherIsBetter"),
     confidenceLevel = 0.95,
     ...
@@ -232,7 +232,7 @@ Possible function skeleton of the internal helper function:
 
 Possible outputs:
 
-- Stage-wise estimate of the Mann-Whitney parameter $\hat p_k$
+- Stage-wise estimate of the Mann-Whitney parameter $\hat \theta_k$
 - Win odds and log win odds estimates, if requested
 - Repeated test statistics
 - Estimated information levels and information fractions
@@ -262,7 +262,7 @@ statistical method, effect scale, endpoint scale, and direction of benefit:
 ```r
 test = c("wilcoxonMannWhitney", "brunnerMunzel", "logWinOdds")
 effectMeasure = c("mannWhitneyParameter", "winOdds", "logWinOdds")
-endpointScale = c("continuous", "ordinal", "orderedCategorical")
+endpointScale = c("continuous", "ordinal")
 direction = c("lowerIsBetter", "higherIsBetter")
 ```
 
